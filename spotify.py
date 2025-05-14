@@ -95,12 +95,24 @@ def getSpotifyInfo():
     response = response.json()
 
     if response and "item" in response:
+
         song_name = response["item"]["name"]
         artist_name = response["item"]["artists"][0]["name"]
+        album_name = response["item"]["album"]["name"]
         progress = response.get("progress_ms", 0)
         duration = response["item"].get("duration_ms", 0)
         is_playing = response.get("is_playing", False)
-        print(song_name, artist_name, progress, duration, is_playing)
+
+        data = {
+            "song_name": song_name,
+            "artist_name": artist_name,
+            "album_name": album_name,
+            "progress": progress,
+            "duration": duration,
+            "is_playing": is_playing,
+        }
+
+        return data
 
 
 if __name__ == '__main__':
