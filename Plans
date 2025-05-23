@@ -1,0 +1,15 @@
+Word synchronization with real audio-
+
+On new song interpolate for rough estimation
+Do audio fetch and alignment in background until it can be applied (maybe start early based on queue)
+
+First audio fetch using spotDL
+Handle audio using pydub or librosa
+Align lyrics with whisper, gentle, or aeneas
+Clean and split lyrics with nltk, re, pronouncing
+
+Cache songs ???
+
+Thread it to not block the overlay
+
+Format support with ffmpeg???

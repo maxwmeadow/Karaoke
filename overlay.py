@@ -1,20 +1,53 @@
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel
-from PyQt6.QtGui import QIcon, QFontDatabase, QFont
+from PyQt6.QtWidgets import QApplication, QLabel
+from PyQt6.QtGui import QFont, QColor
 
-def create_overlay(current):
-    app = QApplication([])
-    window = QMainWindow()
+app = None
+label = None
 
-    window.setMinimumSize(500, 200)
+#Create the lyric overlay based on the current lyric being given
+def create_overlay(current_lyric):
+    global app, label
 
-    window.setWindowFlags(Qt.WindowType.FramelessWindowHint)
-    window.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+    if app is None:
+        app = QApplication([])
 
-    label = QLabel(f"{current[1]}", alignment=Qt.AlignmentFlag.AlignCenter)
-    window.setCentralWidget(label)
+    if label is None:
+        label = QLabel("Starting...")
+        label.setWindowTitle("Karaoke")
 
-    font = window.setFont(QFont("Century Gothic", 18, QFont.Weight.Bold))
+        label.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint | Qt.WindowType.FramelessWindowHint)
+        label.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
 
-    window.show()
-    app.exec()
+        label.setGeometry(100, 100, 1920, 200)
+
+        font = QFont("Arial", 24, QFont.Weight.Bold)
+        label.setFont(font)
+        label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        label.setStyleSheet("""background-color: rgba(0, 0, 0, 180);
+            color: white;
+            border: 2px solid white;
+            border-radius: 15px;
+            padding: 20px;
+            """)
+
+        label.show()
+
+    if current_lyric and len(current_lyric) >= 3:
+        current_word = current_lyric[1]
+        full_line = current_lyric[2]
+
+        highlighted = []
+        for word in full_line.split():
+            if word == current_word:
+                highlighted.append(f"<span style='color: yellow;'>{word}</span>")
+            else:
+                highlighted.append(word)
+
+        lyric_text = " ".join(highlighted)
+        label.setText(lyric_text)
+
+    else:
+        label.setText("No lyrics available")
+
+    app.processEvents()
